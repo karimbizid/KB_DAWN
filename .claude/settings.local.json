@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(wc -l /home/karimbizid/Documents/CC_GHOST_THEME/dawn/assets/css/general/*.css /home/karimbizid/Documents/CC_GHOST_THEME/dawn/assets/css/blog/*.css /home/karimbizid/Documents/CC_GHOST_THEME/dawn/assets/css/site/*.css)",
+      "Bash(zip -r KB.zip KB/ --exclude \"*.DS_Store\")",
+      "WebFetch(domain:ghost.org)",
+      "WebFetch(domain:docs.ghost.org)",
+      "Bash(python3 -c ':*)",
+      "Bash(python3 -c ' *)",
+      "Bash(unzip -q \"dawn\\(1\\).zip\")",
+      "Bash(find /home/karimbizid/Documents/CC_GHOST_THEME -maxdepth 1 -type f ! -name \"*.zip\" -exec basename {} \\\\;)"
+    ]
+  }
+}

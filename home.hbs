@@ -1,0 +1,68 @@
+{{!< default}}
+{{#contentFor "body_class"}} has-custom-home{{/contentFor}}
+
+<main class="site-main home-template">
+
+    {{#if @custom.homepage_hero}}
+    <figure class="home-hero">
+        <img src="{{img_url @custom.homepage_hero size="xxl"}}" alt="{{@site.title}}">
+    </figure>
+    {{else if @site.cover_image}}
+    <figure class="home-hero">
+        <img src="{{img_url @site.cover_image size="xxl"}}" alt="{{@site.title}}">
+    </figure>
+    {{/if}}
+
+    {{#if @custom.homepage_intro}}
+    <div class="home-intro gh-canvas">
+        <p>{{@custom.homepage_intro}}</p>
+    </div>
+    {{else if @site.description}}
+    <div class="home-intro gh-canvas">
+        <p>{{@site.description}}</p>
+    </div>
+    {{/if}}
+
+    <section class="home-categories gh-canvas">
+        <div class="home-categories-grid">
+
+            {{#get "posts" filter="tag:audio" limit="5"}}
+            <div class="home-category-col">
+                <h2 class="home-category-title"><a href="/tag/audio">Audio</a></h2>
+                {{#foreach posts}}
+                    {{> "loop"}}
+                {{/foreach}}
+            </div>
+            {{/get}}
+
+            {{#get "posts" filter="tag:music" limit="5"}}
+            <div class="home-category-col">
+                <h2 class="home-category-title"><a href="/tag/music">Music</a></h2>
+                {{#foreach posts}}
+                    {{> "loop"}}
+                {{/foreach}}
+            </div>
+            {{/get}}
+
+            {{#get "posts" filter="tag:technology" limit="5"}}
+            <div class="home-category-col">
+                <h2 class="home-category-title"><a href="/tag/technology">Technology</a></h2>
+                {{#foreach posts}}
+                    {{> "loop"}}
+                {{/foreach}}
+            </div>
+            {{/get}}
+
+            {{#get "posts" filter="tag:flightsim" limit="5"}}
+            <div class="home-category-col">
+                <h2 class="home-category-title"><a href="/tag/flightsim">Flightsim</a></h2>
+                {{#foreach posts}}
+                    {{> "loop"}}
+                {{/foreach}}
+            </div>
+            {{/get}}
+
+        </div>
+    </section>
+
+</main>

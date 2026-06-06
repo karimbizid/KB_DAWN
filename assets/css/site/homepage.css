@@ -1,0 +1,121 @@
+/* ================================
+   Custom Homepage (home.hbs)
+   ================================ */
+
+/* Hide default cover + featured carousel when custom home is active */
+.has-custom-home .cover,
+.has-custom-home .featured-wrapper {
+    display: none !important;
+}
+
+.home-hero {
+    width: 100%;
+    margin: 0;
+    overflow: hidden;
+}
+
+.home-hero img {
+    width: 100%;
+    height: 70vh;
+    min-height: 280px;
+    object-fit: cover;
+    display: block;
+}
+
+.home-intro {
+    padding: 4rem 0;
+    max-width: 720px;
+    margin: 0 auto;
+    font-size: 1.8rem;
+    text-align: center;
+    line-height: 1.6;
+}
+
+.home-intro p {
+    margin: 0;
+}
+
+.home-categories {
+    padding: 4rem 0 6rem;
+}
+
+.home-categories-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 4rem;
+}
+
+.home-category-title {
+    font-size: 1.2rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding-bottom: 1rem;
+    margin-bottom: 0.5rem;
+    border-bottom: 2px solid var(--brand-color);
+}
+
+.home-category-title a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.home-category-title a:hover {
+    color: var(--brand-color);
+}
+
+.home-category-col .feed-title {
+    font-size: 1.4rem;
+}
+
+.home-category-col .feed-calendar {
+    min-width: 38px;
+    font-size: 1rem;
+}
+
+@media (max-width: 1000px) {
+    .home-categories-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 3rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .home-categories-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .home-hero img {
+        height: 50vw;
+        min-height: 200px;
+    }
+}
+
+/* ================================
+   Hero image — reduce height on all content
+   ================================ */
+
+/* Bring down the default 2:1 crop to roughly 2.5:1 for posts */
+.single-media .u-placeholder.horizontal::before {
+    padding-bottom: 40% !important;
+}
+
+/* Pages: natural proportions capped at 50vh */
+.page-template .single-media .u-placeholder.horizontal::before {
+    padding-bottom: 0 !important;
+    display: none !important;
+}
+
+.page-template .single-media .u-placeholder {
+    height: auto !important;
+    background-color: transparent !important;
+}
+
+.page-template .single-media .u-object-fit {
+    position: static !important;
+    width: 100% !important;
+    height: auto !important;
+    max-height: 50vh !important;
+    object-fit: cover !important;
+}
