@@ -69,5 +69,5 @@
 /* ── Home card & single post tag labels ── */
 .home-card-tags{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:auto}
 .home-card-tag{font-size:1rem;font-weight:400;color:var(--brand-color);white-space:nowrap;line-height:1}
-.single-tags{display:flex;flex-wrap:wrap;gap:.6rem;margin-bottom:.8rem}
-.single-tags .home-card-tag{font-size:1rem;font-weight:400;color:var(--brand-color);line-height:1}
+.single-tags{display:flex;flex-wrap:wrap;justify-content:center;gap:.6rem;margin-bottom:1rem}
+.single-tags .home-card-tag{font-size:1.2rem;font-weight:800;color:var(--brand-color);line-height:1;text-transform:uppercase}
