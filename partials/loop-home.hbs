@@ -1,0 +1,32 @@
+<article class="home-card {{visibility}} {{post_class}}">
+
+    {{#if feature_image}}
+    <div class="home-card-media u-placeholder">
+        <img
+            class="u-object-fit"
+            src="{{img_url feature_image size="s"}}"
+            alt="{{title}}"
+            loading="lazy"
+        >
+    </div>
+    {{/if}}
+
+    <div class="home-card-body">
+        <div class="home-card-meta">
+            <span class="home-card-date">
+                <span class="home-card-day">{{date published_at format="DD"}}</span>
+                <span class="home-card-month">{{date published_at format="MMM"}}</span>
+            </span>
+            {{#if reading_time}}
+            <span class="home-card-sep">·</span>
+            <span class="home-card-length">
+                {{reading_time minute=(t "1 min read") minutes=(t "% min read")}}
+            </span>
+            {{/if}}
+        </div>
+        <h3 class="home-card-title">{{title}}</h3>
+    </div>
+
+    <a class="u-permalink" href="{{url}}" aria-label="{{title}}"></a>
+
+</article>
