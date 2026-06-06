@@ -26,7 +26,7 @@
 
             {{#if tags}}
             <div class="single-tags">
-                {{#foreach tags}}<span class="home-card-tag" data-slug="{{slug}}">#{{name}}</span>{{/foreach}}
+                {{#foreach tags visibility="public"}}<span class="home-card-tag" data-slug="{{slug}}">#{{name}}</span>{{/foreach}}
             </div>
             {{/if}}
 

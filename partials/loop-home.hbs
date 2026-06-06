@@ -7,7 +7,7 @@
         {{/if}}
         {{#if tags}}
         <div class="home-card-tags">
-            {{#foreach tags}}<span class="home-card-tag" data-slug="{{slug}}">#{{name}}</span>{{/foreach}}
+            {{#foreach tags visibility="public"}}<span class="home-card-tag" data-slug="{{slug}}">#{{name}}</span>{{/foreach}}
         </div>
         {{/if}}
         <div class="home-card-meta">

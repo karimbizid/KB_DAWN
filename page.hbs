@@ -6,4 +6,11 @@
         {{> "content" width="wide"}}
     {{/post}}
 
+    {{! Viewpoint pages link back to posts (and viewpoints) sharing their sub-tag }}
+    {{#has tag="hash-viewpoint"}}
+        {{#if @custom.show_related_posts}}
+            {{> "related-posts"}}
+        {{/if}}
+    {{/has}}
+
 </main>

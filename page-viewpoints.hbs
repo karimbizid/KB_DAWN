@@ -1,0 +1,224 @@
+{{!< default}}
+{{!--
+    Viewpoints landing page.
+    Auto-applies to the Ghost page with slug "viewpoints".
+    Lists every page carrying the internal tag #viewpoint (slug hash-viewpoint)
+    and offers the same sub-tag filter bar as the pillar tag pages, but flat
+    across all pillars (#linux, #737, ...).
+--}}
+{{#contentFor "head"}}
+<style>
+    :root {
+        {{#match @custom.homepage_card_size "Compact"}}
+        --home-card-img-w: 80px;  --home-card-img-h: 65px;
+        --home-card-pad: 0.9rem;
+        {{else match @custom.homepage_card_size "Large"}}
+        --home-card-img-w: 120px; --home-card-img-h: 72px;
+        --home-card-pad: 2.2rem;
+        {{else}}
+        --home-card-img-w: 120px; --home-card-img-h: 72px;
+        --home-card-pad: 1.4rem;
+        {{/match}}
+    }
+    .tag-section { margin-bottom: 5rem; }
+    .tag-section-title { margin-bottom: 1.5rem; }
+    .tag-card-feed { max-width: 780px; }
+
+    /* ── Sub-tag filter bar ── */
+    .tag-filter-bar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.2rem;
+        margin-bottom: 2rem;
+        max-width: 780px;
+    }
+    .tag-filter-chip {
+        display: inline-block;
+        padding: 0;
+        border: none;
+        background: transparent;
+        font-size: 1.6rem;
+        font-weight: 400;
+        color: var(--brand-color);
+        cursor: pointer;
+        line-height: 1;
+        font-family: var(--gh-font-body, var(--font-sans));
+        transition: opacity 0.15s;
+    }
+    .tag-filter-chip:hover {
+        opacity: 0.65;
+    }
+    .tag-filter-chip.is-active {
+        font-weight: 800;
+        text-decoration: underline;
+        text-underline-offset: 3px;
+    }
+    .tag-post-item.is-hidden {
+        display: none;
+    }
+    .tag-filter-no-results {
+        display: none;
+        color: var(--secondary-text-color);
+        font-size: 1.4rem;
+        padding: 2rem 0;
+        max-width: 780px;
+    }
+    .tag-filter-no-results.is-visible {
+        display: block;
+    }
+
+    /* Card tags row */
+    .home-card-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: auto; }
+    .home-card-tag  { font-size: 1rem; font-weight: 400; color: var(--brand-color); white-space: nowrap; line-height: 1; }
+</style>
+{{/contentFor}}
+
+<main class="site-main">
+
+{{#post}}
+
+    <section class="tag">
+        <div class="gh-canvas">
+            <h1 class="tag-name">{{title}}</h1>
+            {{#if custom_excerpt}}
+                <div class="tag-description">{{custom_excerpt}}</div>
+            {{/if}}
+        </div>
+    </section>
+
+    {{! Optional intro copy written in the Viewpoints page body }}
+    {{#if html}}
+    <div class="tag-section gh-canvas">
+        <div class="gh-content">{{content}}</div>
+    </div>
+    {{/if}}
+
+    <div class="tag-section gh-canvas">
+        <h2 class="home-category-title tag-section-title">Alle viewpoints</h2>
+
+        {{! Filter chips are injected by JS from the sub-tags found below }}
+        <div class="tag-filter-bar" id="tag-filter-bar"></div>
+
+        {{#get "pages" filter="tag:hash-viewpoint" limit="all" order="published_at desc" include="tags"}}
+        <div class="tag-card-feed" id="tag-posts-feed">
+            {{#foreach pages}}
+            <div class="tag-post-item">
+                {{! Hidden span carries tag slugs — block helpers inside attr values are unreliable }}
+                <span class="js-post-tags" hidden>{{#foreach tags}}{{slug}}|{{/foreach}}</span>
+                {{> "loop-home"}}
+            </div>
+            {{/foreach}}
+        </div>
+        <p class="tag-filter-no-results" id="tag-no-results">Geen viewpoints gevonden voor deze selectie.</p>
+        {{/get}}
+    </div>
+
+{{/post}}
+
+</main>
+
+<script>
+(function () {
+    'use strict';
+
+    var filterBar = document.getElementById('tag-filter-bar');
+    if (!filterBar) return;
+
+    var feed      = document.getElementById('tag-posts-feed');
+    var noResults = document.getElementById('tag-no-results');
+    if (!feed) return;
+
+    var MARKER = 'hash-viewpoint';   // internal #viewpoint marker — never a filter
+
+    // Sub-tags follow the "pillar-sub" slug convention → label is the part
+    // after the first hyphen, e.g. "technology-linux" → "#linux".
+    function labelFor(slug) {
+        var i = slug.indexOf('-');
+        return '#' + (i === -1 ? slug : slug.slice(i + 1));
+    }
+
+    var items = Array.prototype.slice.call(
+        feed.querySelectorAll('.tag-post-item')
+    );
+
+    // ── Collect unique sub-tags across all viewpoints ───────────────────
+    var subTagMap = {};   // { slug: displayLabel }
+    items.forEach(function (item) {
+        var span = item.querySelector('.js-post-tags');
+        if (!span) return;
+        span.textContent.trim().split('|').filter(Boolean).forEach(function (tag) {
+            tag = tag.trim();
+            if (!tag || tag === MARKER) return;       // skip the marker
+            if (tag.indexOf('-') === -1) return;      // only "pillar-sub" sub-tags
+            if (!subTagMap[tag]) subTagMap[tag] = labelFor(tag);
+        });
+    });
+
+    // Clean the visible card labels regardless of whether filters exist
+    document.querySelectorAll('#tag-posts-feed .home-card-tag').forEach(function (tag) {
+        var slug = tag.dataset.slug || '';
+        if (slug === MARKER) { tag.style.display = 'none'; return; }
+        if (slug.indexOf('-') !== -1) { tag.textContent = labelFor(slug); }
+    });
+
+    var subTagSlugs = Object.keys(subTagMap).sort();
+    if (subTagSlugs.length === 0) return;   // No sub-tags — keep bar hidden
+
+    // ── Build filter chips ───────────────────────────────────────────────
+    var activeFilters = {};
+
+    subTagSlugs.forEach(function (slug) {
+        var chip = document.createElement('button');
+        chip.type = 'button';
+        chip.className = 'tag-filter-chip';
+        chip.dataset.tag = slug;
+        chip.textContent = subTagMap[slug];
+
+        chip.addEventListener('click', function () {
+            if (activeFilters[slug]) {
+                delete activeFilters[slug];
+                chip.classList.remove('is-active');
+            } else {
+                activeFilters[slug] = true;
+                chip.classList.add('is-active');
+            }
+            applyFilters();
+        });
+
+        filterBar.appendChild(chip);
+    });
+
+    // ── Filter logic (OR across selected sub-tags) ───────────────────────
+    function applyFilters() {
+        var active  = Object.keys(activeFilters);
+        var visible = 0;
+
+        items.forEach(function (item) {
+            if (active.length === 0) {
+                item.classList.remove('is-hidden');
+                visible++;
+                return;
+            }
+            var span = item.querySelector('.js-post-tags');
+            var tags = span ? span.textContent.trim().split('|').filter(Boolean) : [];
+            var match = active.some(function (f) {
+                return tags.indexOf(f) !== -1;
+            });
+            if (match) {
+                item.classList.remove('is-hidden');
+                visible++;
+            } else {
+                item.classList.add('is-hidden');
+            }
+        });
+
+        if (noResults) {
+            if (visible === 0 && active.length > 0) {
+                noResults.classList.add('is-visible');
+            } else {
+                noResults.classList.remove('is-visible');
+            }
+        }
+    }
+}());
+</script>

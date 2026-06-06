@@ -1,12 +1,34 @@
-{{#get "posts" limit="5" filter="tags:[{{post.tags}}]+id:-{{post.id}}" as |related|}}
-{{#if related}}
+{{!--
+    Related feed — works for both posts and viewpoint pages.
+    Matches on shared (sub)tags. On a post it surfaces related posts plus
+    viewpoint pages that carry the same sub-tag; on a viewpoint page it
+    surfaces the posts (and other viewpoints) that share its sub-tag.
+    The {{#post}} wrapper guarantees {{tags}}/{{id}} resolve to the current
+    resource, even though this partial is included outside a #post block.
+--}}
+{{#post}}
+{{#get "posts" filter="tags:[{{tags separator=',' autolink='false'}}]+id:-{{id}}" limit="6" include="tags" as |relatedposts|}}
+{{#get "pages" filter="tags:[{{tags separator=',' autolink='false'}}]+tag:hash-viewpoint+id:-{{id}}" limit="6" include="tags" as |relatedviewpoints|}}
+
+    {{#if relatedposts}}
     <section class="related-wrapper gh-canvas">
         <h3 class="related-title">Wellicht ook leuk om te lezen?</h3>
         <div class="related-feed">
-            {{#foreach posts}}
-                {{> "loop"}}
-            {{/foreach}}
+            {{#foreach relatedposts}}{{> "loop"}}{{/foreach}}
+            {{#foreach relatedviewpoints}}{{> "loop"}}{{/foreach}}
         </div>
     </section>
-{{/if}}
+    {{else}}
+        {{#if relatedviewpoints}}
+        <section class="related-wrapper gh-canvas">
+            <h3 class="related-title">Wellicht ook leuk om te lezen?</h3>
+            <div class="related-feed">
+                {{#foreach relatedviewpoints}}{{> "loop"}}{{/foreach}}
+            </div>
+        </section>
+        {{/if}}
+    {{/if}}
+
 {{/get}}
+{{/get}}
+{{/post}}
