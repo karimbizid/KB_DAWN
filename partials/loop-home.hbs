@@ -5,6 +5,11 @@
         {{#if custom_excerpt}}
         <p class="home-card-excerpt">{{custom_excerpt}}</p>
         {{/if}}
+        {{#if tags}}
+        <div class="home-card-tags">
+            {{#foreach tags}}<span class="home-card-tag">#{{slug}}</span>{{/foreach}}
+        </div>
+        {{/if}}
         <div class="home-card-meta">
             <span class="home-card-date">
                 <span class="home-card-day">{{date published_at format="DD"}}</span>

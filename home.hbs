@@ -14,6 +14,8 @@
         --home-card-pad: 1.4rem;  --home-grid-max: 1400px;
         {{/match}}
     }
+    .home-card-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: auto; }
+    .home-card-tag  { font-size: 1rem; font-weight: 400; color: var(--brand-color); white-space: nowrap; line-height: 1; }
 </style>
 {{/contentFor}}
 
@@ -47,7 +49,7 @@
         <div class="home-categories-inner">
         <div class="home-categories-grid">
 
-            {{#get "posts" filter="tag:audio" limit="5"}}
+            {{#get "posts" filter="tag:audio" limit="5" include="tags"}}
             <div class="home-category-col">
                 <h2 class="home-category-title"><a href="/tag/audio">Audio</a></h2>
                 {{#foreach posts}}
@@ -56,7 +58,7 @@
             </div>
             {{/get}}
 
-            {{#get "posts" filter="tag:music" limit="5"}}
+            {{#get "posts" filter="tag:music" limit="5" include="tags"}}
             <div class="home-category-col">
                 <h2 class="home-category-title"><a href="/tag/music">Music</a></h2>
                 {{#foreach posts}}
@@ -65,7 +67,7 @@
             </div>
             {{/get}}
 
-            {{#get "posts" filter="tag:technology" limit="5"}}
+            {{#get "posts" filter="tag:technology" limit="5" include="tags"}}
             <div class="home-category-col">
                 <h2 class="home-category-title"><a href="/tag/technology">Technology</a></h2>
                 {{#foreach posts}}
@@ -74,7 +76,7 @@
             </div>
             {{/get}}
 
-            {{#get "posts" filter="tag:flightsim" limit="5"}}
+            {{#get "posts" filter="tag:flightsim" limit="5" include="tags"}}
             <div class="home-category-col">
                 <h2 class="home-category-title"><a href="/tag/flightsim">Flightsim</a></h2>
                 {{#foreach posts}}
