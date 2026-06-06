@@ -16,14 +16,61 @@
     .tag-section { margin-bottom: 5rem; }
     .tag-section-title { margin-bottom: 1.5rem; }
     .tag-card-feed { max-width: 780px; }
+
+    /* ── Sub-tag filter bar ── */
+    .tag-filter-bar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-bottom: 2rem;
+        max-width: 780px;
+    }
+    .tag-filter-chip {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.35rem 0.9rem;
+        border: 1.5px solid var(--light-gray-color);
+        border-radius: 2rem;
+        background: transparent;
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--secondary-text-color);
+        cursor: pointer;
+        transition: border-color 0.15s, color 0.15s, background 0.15s;
+        line-height: 1;
+        font-family: var(--gh-font-body, var(--font-sans));
+        letter-spacing: 0.02em;
+    }
+    .tag-filter-chip:hover {
+        border-color: var(--brand-color);
+        color: var(--brand-color);
+    }
+    .tag-filter-chip.is-active {
+        background: var(--brand-color);
+        border-color: var(--brand-color);
+        color: #fff;
+    }
+    .tag-post-item.is-hidden {
+        display: none;
+    }
+    .tag-filter-no-results {
+        display: none;
+        color: var(--secondary-text-color);
+        font-size: 1.4rem;
+        padding: 2rem 0;
+        max-width: 780px;
+    }
+    .tag-filter-no-results.is-visible {
+        display: block;
+    }
 </style>
 {{/contentFor}}
 
 <main class="site-main">
 
-    {{#tag}}
-    <section class="tag">
+{{#tag}}
 
+    <section class="tag">
         <div class="gh-canvas">
 
             <h1 class="tag-name">{{name}}</h1>
@@ -39,9 +86,9 @@
             {{/if}}
 
         </div>
-
     </section>
 
+    {{! Algemeen — pages tagged with this category, always visible }}
     {{#get "pages" filter="tag:{{slug}}" order="published_at desc" limit="all"}}
         {{#if pages}}
         <div class="tag-section gh-canvas">
@@ -55,17 +102,120 @@
         {{/if}}
     {{/get}}
 
-    {{/tag}}
-
+    {{! Alle posts — with sub-tag filter bar }}
     <div class="tag-section gh-canvas">
         <h2 class="home-category-title tag-section-title">Alle posts</h2>
-        <div class="tag-card-feed post-feed">
+
+        {{! Filter chips are injected by JS; data-prefix tells JS which prefix to strip }}
+        <div class="tag-filter-bar" id="tag-filter-bar" data-prefix="{{slug}}-"></div>
+
+        {{#get "posts" filter="tag:{{slug}}" limit="all" order="published_at desc"}}
+        <div class="tag-card-feed" id="tag-posts-feed">
             {{#foreach posts}}
+            <div class="tag-post-item">
+                {{! Hidden span carries tag slugs — block helpers inside attr values are unreliable }}
+                <span class="js-post-tags" hidden>{{#foreach tags}}{{slug}}|{{/foreach}}</span>
                 {{> "loop-home"}}
+            </div>
             {{/foreach}}
         </div>
+        <p class="tag-filter-no-results" id="tag-no-results">Geen artikelen gevonden voor deze selectie.</p>
+        {{/get}}
     </div>
 
-    {{pagination}}
+{{/tag}}
 
 </main>
+
+<script>
+(function () {
+    'use strict';
+
+    var filterBar = document.getElementById('tag-filter-bar');
+    if (!filterBar) return;
+
+    var prefix    = filterBar.dataset.prefix || '';         // e.g. "technology-"
+    var feed      = document.getElementById('tag-posts-feed');
+    var noResults = document.getElementById('tag-no-results');
+    if (!feed) return;
+
+    var items = Array.prototype.slice.call(
+        feed.querySelectorAll('.tag-post-item')
+    );
+
+    // ── Collect unique sub-tags from hidden spans inside each post ───────
+    var subTagMap = {};   // { slug: displayLabel }
+    items.forEach(function (item) {
+        var span = item.querySelector('.js-post-tags');
+        if (!span) return;
+        var raw = span.textContent.trim().split('|').filter(Boolean);
+        raw.forEach(function (tag) {
+            tag = tag.trim();
+            if (tag && tag.indexOf(prefix) === 0 && !subTagMap[tag]) {
+                subTagMap[tag] = '#' + tag.slice(prefix.length);
+            }
+        });
+    });
+
+    var subTagSlugs = Object.keys(subTagMap);
+    if (subTagSlugs.length === 0) return;  // No sub-tags — keep bar hidden
+
+    // ── Build filter chips ───────────────────────────────────────────────
+    var activeFilters = {};   // { slug: true }
+
+    subTagSlugs.forEach(function (slug) {
+        var chip = document.createElement('button');
+        chip.type = 'button';
+        chip.className = 'tag-filter-chip';
+        chip.dataset.tag = slug;
+        chip.textContent = subTagMap[slug];
+
+        chip.addEventListener('click', function () {
+            if (activeFilters[slug]) {
+                delete activeFilters[slug];
+                chip.classList.remove('is-active');
+            } else {
+                activeFilters[slug] = true;
+                chip.classList.add('is-active');
+            }
+            applyFilters();
+        });
+
+        filterBar.appendChild(chip);
+    });
+
+    // ── Filter logic ─────────────────────────────────────────────────────
+    function applyFilters() {
+        var active  = Object.keys(activeFilters);
+        var visible = 0;
+
+        items.forEach(function (item) {
+            if (active.length === 0) {
+                item.classList.remove('is-hidden');
+                visible++;
+                return;
+            }
+            var span  = item.querySelector('.js-post-tags');
+            var tags  = span ? span.textContent.trim().split('|').filter(Boolean) : [];
+            // OR logic: visible if post has ANY of the selected sub-tags
+            var match = active.some(function (f) {
+                return tags.indexOf(f) !== -1;
+            });
+            if (match) {
+                item.classList.remove('is-hidden');
+                visible++;
+            } else {
+                item.classList.add('is-hidden');
+            }
+        });
+
+        if (noResults) {
+            if (visible === 0 && active.length > 0) {
+                noResults.classList.add('is-visible');
+            } else {
+                noResults.classList.remove('is-visible');
+            }
+        }
+    }
+}());
+</script>
