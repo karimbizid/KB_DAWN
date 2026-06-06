@@ -103,8 +103,8 @@
         <div class="tag-card-feed" id="tag-posts-feed">
             {{#foreach pages}}
             <div class="tag-post-item">
-                {{! Hidden span carries tag slugs — block helpers inside attr values are unreliable }}
-                <span class="js-post-tags" hidden>{{#foreach tags}}{{slug}}|{{/foreach}}</span>
+                {{! Span carries ALL tag slugs (public + internal) for filter bar detection }}
+                <span class="js-post-tags" hidden>{{#foreach tags}}{{slug}},{{/foreach}}</span>
                 {{> "loop-home"}}
             </div>
             {{/foreach}}
@@ -130,8 +130,7 @@
 
     var MARKER = 'hash-viewpoint';   // internal #viewpoint marker — never a filter
 
-    // Sub-tags follow the "pillar-sub" slug convention → label is the part
-    // after the first hyphen, e.g. "technology-linux" → "#linux".
+    // Turn a slug into a readable label: "technology-linux" → "#linux", "nieuws" → "#nieuws"
     function labelFor(slug) {
         var i = slug.indexOf('-');
         return '#' + (i === -1 ? slug : slug.slice(i + 1));
@@ -141,24 +140,42 @@
         feed.querySelectorAll('.tag-post-item')
     );
 
-    // ── Collect unique sub-tags across all viewpoints ───────────────────
+    // ── Collect unique sub-tags — two sources combined ───────────────────
+    // Source A: hidden span with ALL tags (public + internal) from Ghost
+    // Source B: rendered .home-card-tag elements (public only, via loop-home.hbs)
     var subTagMap = {};   // { slug: displayLabel }
+
     items.forEach(function (item) {
+        // Source A: hidden span
         var span = item.querySelector('.js-post-tags');
-        if (!span) return;
-        span.textContent.trim().split('|').filter(Boolean).forEach(function (tag) {
-            tag = tag.trim();
-            if (!tag || tag === MARKER) return;       // skip the marker
-            if (tag.indexOf('-') === -1) return;      // only "pillar-sub" sub-tags
-            if (!subTagMap[tag]) subTagMap[tag] = labelFor(tag);
+        if (span) {
+            span.textContent.trim().split(',').filter(Boolean).forEach(function (slug) {
+                slug = slug.trim();
+                if (!slug || slug === MARKER) return;
+                if (!subTagMap[slug]) subTagMap[slug] = labelFor(slug);
+            });
+        }
+        // Source B: card tag elements
+        item.querySelectorAll('.home-card-tag').forEach(function (tagEl) {
+            var slug = tagEl.dataset.slug || '';
+            if (!slug || slug === MARKER) return;
+            if (!subTagMap[slug]) subTagMap[slug] = labelFor(slug);
         });
     });
 
-    // Clean the visible card labels regardless of whether filters exist
+    // Debug: log what Ghost gave us per card (open browser console to inspect)
+    console.log('[Viewpoints] tag slugs per card:');
+    items.forEach(function (item) {
+        var title = (item.querySelector('.home-card-title') || {}).textContent || '?';
+        var span  = item.querySelector('.js-post-tags');
+        console.log(' -', title.trim(), '→', span ? span.textContent.trim() : '(no span)');
+    });
+
+    // Update visible card label text using labelFor formatting
     document.querySelectorAll('#tag-posts-feed .home-card-tag').forEach(function (tag) {
         var slug = tag.dataset.slug || '';
         if (slug === MARKER) { tag.style.display = 'none'; return; }
-        if (slug.indexOf('-') !== -1) { tag.textContent = labelFor(slug); }
+        tag.textContent = labelFor(slug);
     });
 
     var subTagSlugs = Object.keys(subTagMap).sort();
@@ -200,7 +217,12 @@
                 return;
             }
             var span = item.querySelector('.js-post-tags');
-            var tags = span ? span.textContent.trim().split('|').filter(Boolean) : [];
+            var tags = span ? span.textContent.trim().split(',').filter(Boolean) : [];
+            // Also include slugs from rendered card tags as fallback
+            item.querySelectorAll('.home-card-tag').forEach(function (el) {
+                var s = el.dataset.slug || '';
+                if (s && tags.indexOf(s) === -1) tags.push(s);
+            });
             var match = active.some(function (f) {
                 return tags.indexOf(f) !== -1;
             });
