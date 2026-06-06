@@ -23,7 +23,8 @@
     </div>
     {{/if}}
 
-    <section class="home-categories gh-canvas">
+    <section class="home-categories">
+        <div class="home-categories-inner">
         <div class="home-categories-grid">
 
             {{#get "posts" filter="tag:audio" limit="5"}}
@@ -62,6 +63,7 @@
             </div>
             {{/get}}
 
+        </div>
         </div>
     </section>
 
