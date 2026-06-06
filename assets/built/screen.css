@@ -57,7 +57,7 @@
 
 /* Narrow Feature Image: full-width, half height (overrides page-template rule above) */
 .page-template-narrow-feature-image .single-media .u-placeholder.horizontal::before,
-.post-template-narrow-feature-image .single-media .u-placeholder.horizontal::before{padding-bottom:20%!important;display:block!important}
+.post-template-narrow-feature-image .single-media .u-placeholder.horizontal::before{padding-bottom:15%!important;display:block!important}
 .page-template-narrow-feature-image .single-media .u-placeholder,
 .post-template-narrow-feature-image .single-media .u-placeholder{height:auto!important;background-color:var(--lighter-gray-color)!important}
 .page-template-narrow-feature-image .single-media .u-object-fit,

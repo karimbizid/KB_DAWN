@@ -234,7 +234,7 @@
 /* Narrow Feature Image: full-width banner at ~half the natural image height (20% ≈ halve 41%) */
 .page-template-narrow-feature-image .single-media .u-placeholder.horizontal::before,
 .post-template-narrow-feature-image .single-media .u-placeholder.horizontal::before {
-    padding-bottom: 20% !important;
+    padding-bottom: 15% !important;
     display: block !important;
 }
 
