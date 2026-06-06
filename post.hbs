@@ -41,20 +41,21 @@ document.addEventListener('DOMContentLoaded', function () {
     );
     if (!tagEls.length) return;
 
-    // Read displayed tag texts (strip leading #, lowercase for comparison)
-    var tagTexts = tagEls.map(function (el) {
-        return el.textContent.replace(/^#/, '').toLowerCase();
+    // Use data-slug (always lowercase, always hyphens) for reliable comparison
+    var slugs = tagEls.map(function (el) {
+        return el.getAttribute('data-slug') || '';
     });
 
-    // For each tag: if its text starts with another tag's text + '-', strip that prefix
-    // e.g. tags = ['technology', 'technology-linux'] → 'technology-linux' becomes 'linux'
+    // For each tag: if its slug starts with another tag's slug + '-', strip that prefix
+    // e.g. slugs = ['technology', 'technology-linux'] → display becomes '#Linux'
     tagEls.forEach(function (el, idx) {
-        var text = tagTexts[idx];
-        for (var i = 0; i < tagTexts.length; i++) {
+        var slug = slugs[idx];
+        for (var i = 0; i < slugs.length; i++) {
             if (i === idx) continue;
-            var prefix = tagTexts[i] + '-';
-            if (text.indexOf(prefix) === 0) {
-                el.textContent = '#' + text.slice(prefix.length);
+            var prefix = slugs[i] + '-';
+            if (slug.indexOf(prefix) === 0) {
+                var remainder = slug.slice(prefix.length);
+                el.textContent = '#' + remainder.charAt(0).toUpperCase() + remainder.slice(1);
                 break;
             }
         }
