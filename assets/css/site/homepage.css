@@ -231,6 +231,28 @@
     object-fit: cover !important;
 }
 
+/* Narrow Feature Image: full-width banner at ~half the natural image height (20% ≈ halve 41%) */
+.page-template-narrow-feature-image .single-media .u-placeholder.horizontal::before,
+.post-template-narrow-feature-image .single-media .u-placeholder.horizontal::before {
+    padding-bottom: 20% !important;
+    display: block !important;
+}
+
+.page-template-narrow-feature-image .single-media .u-placeholder,
+.post-template-narrow-feature-image .single-media .u-placeholder {
+    height: auto !important;
+    background-color: var(--lighter-gray-color) !important;
+}
+
+.page-template-narrow-feature-image .single-media .u-object-fit,
+.post-template-narrow-feature-image .single-media .u-object-fit {
+    position: absolute !important;
+    width: 100% !important;
+    height: 100% !important;
+    max-height: none !important;
+    object-fit: cover !important;
+}
+
 /* ================================
    Responsive
    ================================ */

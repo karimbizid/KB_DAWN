@@ -7,6 +7,7 @@
 
 
 
+
 /* ================================
    KB-DAWN v0.3 Custom Additions
    ================================ */
@@ -19,10 +20,11 @@
 
 /* Intro */
 .home-intro{padding:3.5rem 0 0;max-width:720px;margin:0 auto;font-size:1.7rem;text-align:center;line-height:1.6}
-.home-intro p{margin:0 0 .6rem}
-.home-intro p:last-child{margin-bottom:0}
+.home-intro p,.home-intro h1,.home-intro h2,.home-intro h3{margin:0 0 .6rem}
+.home-intro *:last-child{margin-bottom:0}
+.home-intro figure{margin:0}
 
-/* Category section — max-width driven by --home-grid-max set in home.hbs style block */
+/* Category section */
 .home-categories{width:100%;padding:3rem 0 6rem}
 .home-categories-inner{max-width:var(--home-grid-max,1400px);width:calc(100% - 8vw);margin:0 auto}
 .home-categories-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:3rem;align-items:start}
@@ -30,7 +32,7 @@
 .home-category-title a{color:inherit;text-decoration:none}
 .home-category-title a:hover{color:var(--brand-color)}
 
-/* Home card — padding driven by --home-card-pad */
+/* Home card */
 .home-card{position:relative;display:flex;align-items:center;gap:1.2rem;padding:var(--home-card-pad,1.4rem);margin-bottom:1rem;border:1px solid var(--light-gray-color);border-radius:4px;overflow:hidden;background:var(--background-color);transition:box-shadow .15s ease}
 .home-card:last-child{margin-bottom:0}
 .home-card:hover{box-shadow:0 2px 14px rgba(0,0,0,.09)}
@@ -42,15 +44,24 @@
 .home-card-month{text-transform:uppercase}
 .home-card-sep{font-size:1rem;color:var(--light-gray-color);line-height:1}
 .home-card-length{font-size:1.1rem;font-weight:400;color:var(--secondary-text-color);white-space:nowrap;line-height:1}
-/* Thumbnail size via --home-card-img-* */
 .home-card-media{flex-shrink:0;width:var(--home-card-img-w,120px);height:var(--home-card-img-h,72px);border-radius:3px;overflow:hidden}
 .home-card-media img{width:100%;height:100%;object-fit:cover;display:block}
 
-/* Hero image height fix */
+/* Posts: reduce hero from 2:1 to ~2.5:1 */
 .single-media .u-placeholder.horizontal::before{padding-bottom:40%!important}
+
+/* All page templates: natural proportions capped at 50vh */
 .page-template .single-media .u-placeholder.horizontal::before{padding-bottom:0!important;display:none!important}
 .page-template .single-media .u-placeholder{height:auto!important;background-color:transparent!important}
 .page-template .single-media .u-object-fit{position:static!important;width:100%!important;height:auto!important;max-height:50vh!important;object-fit:cover!important}
+
+/* Narrow Feature Image: full-width, half height (overrides page-template rule above) */
+.page-template-narrow-feature-image .single-media .u-placeholder.horizontal::before,
+.post-template-narrow-feature-image .single-media .u-placeholder.horizontal::before{padding-bottom:20%!important;display:block!important}
+.page-template-narrow-feature-image .single-media .u-placeholder,
+.post-template-narrow-feature-image .single-media .u-placeholder{height:auto!important;background-color:var(--lighter-gray-color)!important}
+.page-template-narrow-feature-image .single-media .u-object-fit,
+.post-template-narrow-feature-image .single-media .u-object-fit{position:absolute!important;width:100%!important;height:100%!important;max-height:none!important;object-fit:cover!important}
 
 @media(max-width:1100px){.home-categories-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:640px){.home-categories-grid{grid-template-columns:1fr}.home-hero img{height:50vw;min-height:200px}}
