@@ -33,23 +33,36 @@
 </main>
 
 <script>
-(function () {
+document.addEventListener('DOMContentLoaded', function () {
     var tagEls = Array.prototype.slice.call(
         document.querySelectorAll('.single-tags .home-card-tag')
     );
-    // Collect all slugs present on this post
-    var slugs = tagEls.map(function (el) { return el.dataset.slug || ''; });
+    if (!tagEls.length) return;
 
-    // For each tag: if its slug starts with another tag's slug + '-', strip that prefix
+    // Strategy 1: derive prefix from the primary-tag link already on the page
+    // e.g. <a href="/tag/technology"> → prefix "technology-"
+    var knownPrefixes = [];
+    var primaryTagLink = document.querySelector('.single-meta-tag a');
+    if (primaryTagLink) {
+        var href = primaryTagLink.getAttribute('href').replace(/\/$/, '');
+        var catSlug = href.split('/').pop();
+        if (catSlug) knownPrefixes.push(catSlug + '-');
+    }
+
+    // Strategy 2: also derive prefixes from the slugs of the tags themselves
+    var slugs = tagEls.map(function (el) { return (el.dataset.slug || '').toLowerCase(); });
+    slugs.forEach(function (s) { if (s) knownPrefixes.push(s + '-'); });
+
+    // Strip the first matching prefix from each sub-tag
     tagEls.forEach(function (el) {
-        var slug = el.dataset.slug || '';
-        for (var i = 0; i < slugs.length; i++) {
-            var prefix = slugs[i] + '-';
-            if (slug !== slugs[i] && slug.indexOf(prefix) === 0) {
+        var slug = (el.dataset.slug || el.textContent.replace(/^#/, '')).toLowerCase();
+        for (var i = 0; i < knownPrefixes.length; i++) {
+            var prefix = knownPrefixes[i];
+            if (slug !== prefix.slice(0, -1) && slug.indexOf(prefix) === 0) {
                 el.textContent = '#' + slug.slice(prefix.length);
                 break;
             }
         }
     });
-}());
+});
 </script>
