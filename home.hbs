@@ -4,11 +4,11 @@
 <style>
     :root {
         {{#match @custom.homepage_card_size "Compact"}}
-        --home-card-img-w: 90px; --home-card-img-h: 68px;
+        --home-card-img-w: 80px; --home-card-img-h: 68px;
         {{else match @custom.homepage_card_size "Large"}}
-        --home-card-img-w: 150px; --home-card-img-h: 112px;
+        --home-card-img-w: 165px; --home-card-img-h: 75px;
         {{else}}
-        --home-card-img-w: 120px; --home-card-img-h: 90px;
+        --home-card-img-w: 120px; --home-card-img-h: 72px;
         {{/match}}
     }
 </style>
@@ -29,6 +29,8 @@
     {{#if @custom.homepage_intro}}
     <div class="home-intro gh-canvas">
         <p>{{@custom.homepage_intro}}</p>
+        {{#if @custom.homepage_intro_2}}<p>{{@custom.homepage_intro_2}}</p>{{/if}}
+        {{#if @custom.homepage_intro_3}}<p>{{@custom.homepage_intro_3}}</p>{{/if}}
     </div>
     {{else if @site.description}}
     <div class="home-intro gh-canvas">
