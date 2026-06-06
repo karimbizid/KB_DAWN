@@ -1,4 +1,20 @@
 {{!< default}}
+{{#contentFor "head"}}
+<style>
+    :root {
+        {{#match @custom.homepage_card_size "Compact"}}
+        --home-card-img-w: 80px;  --home-card-img-h: 65px;
+        --home-card-pad: 0.9rem;
+        {{else match @custom.homepage_card_size "Large"}}
+        --home-card-img-w: 120px; --home-card-img-h: 72px;
+        --home-card-pad: 2.2rem;
+        {{else}}
+        --home-card-img-w: 120px; --home-card-img-h: 72px;
+        --home-card-pad: 1.4rem;
+        {{/match}}
+    }
+</style>
+{{/contentFor}}
 
 <main class="site-main">
 
@@ -22,12 +38,29 @@
         </div>
 
     </section>
+
+    {{#get "posts" filter="tag:{{slug}}+tag:algemeen" order="published_at desc" limit="all"}}
+        {{#if posts}}
+        <div class="tag-section gh-canvas">
+            <h2 class="home-category-title tag-section-title">Algemeen</h2>
+            <div class="tag-card-feed">
+                {{#foreach posts}}
+                    {{> "loop-home"}}
+                {{/foreach}}
+            </div>
+        </div>
+        {{/if}}
+    {{/get}}
+
     {{/tag}}
 
-    <div class="post-feed gh-feed gh-canvas">
-        {{#foreach posts}}
-            {{> "loop"}}
-        {{/foreach}}
+    <div class="tag-section gh-canvas">
+        <h2 class="home-category-title tag-section-title">Alle posts</h2>
+        <div class="tag-card-feed post-feed">
+            {{#foreach posts}}
+                {{> "loop-home"}}
+            {{/foreach}}
+        </div>
     </div>
 
     {{pagination}}

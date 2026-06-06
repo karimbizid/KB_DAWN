@@ -49,3 +49,19 @@
         margin-top: 3rem;
     }
 }
+
+/* ================================
+   Tag page sections
+   ================================ */
+
+.tag-section {
+    margin-bottom: 3.5rem;
+}
+
+.tag-section-title {
+    margin-bottom: 1.5rem;
+}
+
+.tag-card-feed {
+    max-width: 780px;
+}
