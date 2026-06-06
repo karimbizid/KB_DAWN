@@ -109,7 +109,7 @@
         {{! Filter chips are injected by JS; data-prefix tells JS which prefix to strip }}
         <div class="tag-filter-bar" id="tag-filter-bar" data-prefix="{{slug}}-"></div>
 
-        {{#get "posts" filter="tag:{{slug}}" limit="all" order="published_at desc"}}
+        {{#get "posts" filter="tag:{{slug}}" limit="all" order="published_at desc" include="tags"}}
         <div class="tag-card-feed" id="tag-posts-feed">
             {{#foreach posts}}
             <div class="tag-post-item">
