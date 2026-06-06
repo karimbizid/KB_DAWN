@@ -21,34 +21,30 @@
     .tag-filter-bar {
         display: flex;
         flex-wrap: wrap;
-        gap: 0.5rem;
+        gap: 1.2rem;
         margin-bottom: 2rem;
         max-width: 780px;
     }
     .tag-filter-chip {
-        display: inline-flex;
-        align-items: center;
-        padding: 0.35rem 0.9rem;
-        border: 1.5px solid var(--light-gray-color);
-        border-radius: 2rem;
+        display: inline-block;
+        padding: 0;
+        border: none;
         background: transparent;
-        font-size: 1.1rem;
-        font-weight: 700;
-        color: var(--secondary-text-color);
+        font-size: 1.6rem;
+        font-weight: 400;
+        color: var(--brand-color);
         cursor: pointer;
-        transition: border-color 0.15s, color 0.15s, background 0.15s;
         line-height: 1;
         font-family: var(--gh-font-body, var(--font-sans));
-        letter-spacing: 0.02em;
+        transition: opacity 0.15s;
     }
     .tag-filter-chip:hover {
-        border-color: var(--brand-color);
-        color: var(--brand-color);
+        opacity: 0.65;
     }
     .tag-filter-chip.is-active {
-        background: var(--brand-color);
-        border-color: var(--brand-color);
-        color: #fff;
+        font-weight: 800;
+        text-decoration: underline;
+        text-underline-offset: 3px;
     }
     .tag-post-item.is-hidden {
         display: none;
