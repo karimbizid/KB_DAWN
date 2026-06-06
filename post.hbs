@@ -1,4 +1,20 @@
 {{!< default}}
+{{#contentFor "head"}}
+<style>
+    .single-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.6rem;
+        margin-bottom: 0.8rem;
+    }
+    .single-tags .home-card-tag {
+        font-size: 1rem;
+        font-weight: 400;
+        color: var(--brand-color);
+        line-height: 1;
+    }
+</style>
+{{/contentFor}}
 
 <main class="site-main">
 
@@ -15,3 +31,25 @@
     {{/post}}
 
 </main>
+
+<script>
+(function () {
+    var tagEls = Array.prototype.slice.call(
+        document.querySelectorAll('.single-tags .home-card-tag')
+    );
+    // Collect all slugs present on this post
+    var slugs = tagEls.map(function (el) { return el.dataset.slug || ''; });
+
+    // For each tag: if its slug starts with another tag's slug + '-', strip that prefix
+    tagEls.forEach(function (el) {
+        var slug = el.dataset.slug || '';
+        for (var i = 0; i < slugs.length; i++) {
+            var prefix = slugs[i] + '-';
+            if (slug !== slugs[i] && slug.indexOf(prefix) === 0) {
+                el.textContent = '#' + slug.slice(prefix.length);
+                break;
+            }
+        }
+    });
+}());
+</script>

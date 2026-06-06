@@ -24,6 +24,12 @@
             </div>
             {{/is}}
 
+            {{#if tags}}
+            <div class="single-tags">
+                {{#foreach tags}}<span class="home-card-tag" data-slug="{{slug}}">#{{name}}</span>{{/foreach}}
+            </div>
+            {{/if}}
+
             <h1 class="single-title">{{title}}</h1>
 
             {{#if custom_excerpt}}
