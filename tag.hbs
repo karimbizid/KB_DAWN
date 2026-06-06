@@ -39,12 +39,12 @@
 
     </section>
 
-    {{#get "posts" filter="tag:{{slug}}+tag:algemeen" order="published_at desc" limit="all"}}
-        {{#if posts}}
+    {{#get "pages" filter="tag:{{slug}}" order="published_at desc" limit="all"}}
+        {{#if pages}}
         <div class="tag-section gh-canvas">
             <h2 class="home-category-title tag-section-title">Algemeen</h2>
             <div class="tag-card-feed">
-                {{#foreach posts}}
+                {{#foreach pages}}
                     {{> "loop-home"}}
                 {{/foreach}}
             </div>
