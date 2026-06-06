@@ -4,11 +4,14 @@
 <style>
     :root {
         {{#match @custom.homepage_card_size "Compact"}}
-        --home-card-img-w: 80px; --home-card-img-h: 68px;
+        --home-card-img-w: 80px;  --home-card-img-h: 65px;
+        --home-card-pad: 0.9rem;  --home-grid-max: 1400px;
         {{else match @custom.homepage_card_size "Large"}}
-        --home-card-img-w: 165px; --home-card-img-h: 75px;
+        --home-card-img-w: 120px; --home-card-img-h: 72px;
+        --home-card-pad: 2.2rem;  --home-grid-max: 1650px;
         {{else}}
         --home-card-img-w: 120px; --home-card-img-h: 72px;
+        --home-card-pad: 1.4rem;  --home-grid-max: 1400px;
         {{/match}}
     }
 </style>

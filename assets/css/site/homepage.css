@@ -50,9 +50,9 @@
     padding: 3rem 0 6rem;
 }
 
-/* Inner wrapper: centered, spreads to full readable width */
+/* Inner wrapper: centered, max-width driven by card-size setting */
 .home-categories-inner {
-    max-width: 1400px;
+    max-width: var(--home-grid-max, 1400px);
     width: calc(100% - 8vw);
     margin: 0 auto;
 }
@@ -92,7 +92,7 @@
     display: flex;
     align-items: center;
     gap: 1.2rem;
-    padding: 1.4rem;
+    padding: var(--home-card-pad, 1.4rem);
     margin-bottom: 1rem;
     border: 1px solid var(--light-gray-color);
     border-radius: 4px;
