@@ -32,10 +32,6 @@
                 </div>
             {{/if}}
 
-            <div class="gh-meta-share">
-                <a href="#/share" class="gh-button-share">{{t "Share"}} {{> "icons/share"}}</a>
-            </div>
-
             {{#if feature_image}}
             {{#unless no_image}}
                 <figure class="single-media kg-width-{{width}}">
@@ -76,22 +72,7 @@
         {{/prev_post}}
         </div>
 
-        <div class="single-footer-middle">
-        {{#if @custom.show_author}}
-            <div class="single-footer-top">
-                <h3 class="single-footer-title">{{t "Published by:"}}</h3>
-                <div class="author-list">
-                    {{#foreach authors}}
-                    <div class="author-image-placeholder u-placeholder square">
-                        <a href="{{url}}" title="{{name}}">
-                            <img class="author-image u-object-fit" src="{{img_url profile_image size="xs"}}" alt="{{name}}" loading="lazy">
-                        </a>
-                    </div>
-                    {{/foreach}}
-                </div>
-            </div>
-        {{/if}}
-        </div>
+        <div class="single-footer-middle"></div>
 
         <div class="single-footer-right">
         {{#next_post}}
