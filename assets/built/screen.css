@@ -4,6 +4,7 @@
 
 
 
+
 /* ================================
    KB-DAWN v0.3 Custom Additions
    ================================ */
@@ -14,11 +15,11 @@
 .home-hero{width:100%;margin:0;overflow:hidden}
 .home-hero img{width:100%;height:70vh;min-height:280px;object-fit:cover;display:block}
 
-/* Intro */
-.home-intro{padding:3.5rem 0 0;max-width:720px;margin:0 auto;font-size:1.7rem;text-align:center;line-height:1.6;color:var(--secondary-text-color)}
+/* Intro — no color override, inherits dark body text */
+.home-intro{padding:3.5rem 0 0;max-width:720px;margin:0 auto;font-size:1.7rem;text-align:center;line-height:1.6}
 .home-intro p{margin:0}
 
-/* Category section — own centering */
+/* Category section */
 .home-categories{width:100%;padding:3rem 0 6rem}
 .home-categories-inner{max-width:1400px;width:calc(100% - 8vw);margin:0 auto}
 .home-categories-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:3rem;align-items:start}
@@ -38,7 +39,8 @@
 .home-card-month{text-transform:uppercase}
 .home-card-sep{font-size:1rem;color:var(--light-gray-color);line-height:1}
 .home-card-length{font-size:1.1rem;font-weight:400;color:var(--secondary-text-color);white-space:nowrap;line-height:1}
-.home-card-media{flex-shrink:0;width:110px;height:82px;border-radius:3px;overflow:hidden}
+/* Thumbnail: size via CSS var injected by home.hbs based on Ghost Admin setting */
+.home-card-media{flex-shrink:0;width:var(--home-card-img-w,120px);height:var(--home-card-img-h,90px);border-radius:3px;overflow:hidden}
 .home-card-media img{width:100%;height:100%;object-fit:cover;display:block}
 
 /* Hero image height fix */

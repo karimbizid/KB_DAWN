@@ -1,5 +1,18 @@
 {{!< default}}
 {{#contentFor "body_class"}} has-custom-home{{/contentFor}}
+{{#contentFor "head"}}
+<style>
+    :root {
+        {{#match @custom.homepage_card_size "Compact"}}
+        --home-card-img-w: 90px; --home-card-img-h: 68px;
+        {{else match @custom.homepage_card_size "Large"}}
+        --home-card-img-w: 150px; --home-card-img-h: 112px;
+        {{else}}
+        --home-card-img-w: 120px; --home-card-img-h: 90px;
+        {{/match}}
+    }
+</style>
+{{/contentFor}}
 
 <main class="site-main home-template">
 

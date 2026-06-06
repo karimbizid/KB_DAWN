@@ -81,6 +81,12 @@
                 "type": "text",
                 "group": "homepage"
             },
+            "homepage_card_size": {
+                "type": "select",
+                "options": ["Compact", "Regular", "Large"],
+                "default": "Regular",
+                "group": "homepage"
+            },
             "show_featured_posts": {
                 "type": "boolean",
                 "default": true,
