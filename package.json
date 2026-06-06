@@ -1,7 +1,7 @@
 {
     "name": "kb-dawn",
     "description": "Custom Ghost theme by Karim Bizid, based on Dawn",
-    "version": "3.1.0",
+    "version": "3.2.0",
     "private": true,
     "engines": {
         "ghost": ">=5.0.0"
@@ -36,6 +36,9 @@
             },
             "xxl": {
                 "width": 1920
+            },
+            "xxxl": {
+                "width": 2400
             }
         },
         "card_assets": true,
