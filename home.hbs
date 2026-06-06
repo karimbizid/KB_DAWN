@@ -90,3 +90,23 @@
     </section>
 
 </main>
+
+<script>
+(function () {
+    // Per category column: strip the category prefix from sub-tag labels
+    // e.g. slug "technology-linux" → "#linux" in the Technology column
+    document.querySelectorAll('.home-category-col').forEach(function (col) {
+        var link = col.querySelector('.home-category-title a');
+        if (!link) return;
+        // derive prefix from the href: "/tag/technology" → "technology-"
+        var href   = link.getAttribute('href').replace(/\/$/, '');
+        var prefix = href.split('/').pop() + '-';
+        col.querySelectorAll('.home-card-tag').forEach(function (tag) {
+            var slug = tag.dataset.slug || '';
+            if (slug.indexOf(prefix) === 0) {
+                tag.textContent = '#' + slug.slice(prefix.length);
+            }
+        });
+    });
+}());
+</script>

@@ -217,5 +217,15 @@
             }
         }
     }
+    // Strip category prefix from tag labels inside post cards
+    // e.g. slug "technology-linux" → "#linux"
+    if (prefix) {
+        document.querySelectorAll('.home-card-tag').forEach(function (tag) {
+            var slug = tag.dataset.slug || '';
+            if (slug.indexOf(prefix) === 0) {
+                tag.textContent = '#' + slug.slice(prefix.length);
+            }
+        });
+    }
 }());
 </script>
