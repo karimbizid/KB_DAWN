@@ -33,12 +33,20 @@
     line-height: 1.6;
 }
 
-.home-intro p {
+.home-intro p,
+.home-intro h1,
+.home-intro h2,
+.home-intro h3 {
     margin: 0 0 0.6rem;
 }
 
-.home-intro p:last-child {
+.home-intro *:last-child {
     margin-bottom: 0;
+}
+
+/* Strip default figure/image margins inside intro */
+.home-intro figure {
+    margin: 0;
 }
 
 /* ================================

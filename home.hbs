@@ -29,17 +29,19 @@
     </figure>
     {{/if}}
 
-    {{#if @custom.homepage_intro}}
-    <div class="home-intro gh-canvas">
-        <p>{{@custom.homepage_intro}}</p>
-        {{#if @custom.homepage_intro_2}}<p>{{@custom.homepage_intro_2}}</p>{{/if}}
-        {{#if @custom.homepage_intro_3}}<p>{{@custom.homepage_intro_3}}</p>{{/if}}
-    </div>
-    {{else if @site.description}}
-    <div class="home-intro gh-canvas">
-        <p>{{@site.description}}</p>
-    </div>
-    {{/if}}
+    {{#get "pages" filter="slug:welkomtekst" limit="1"}}
+        {{#foreach pages}}
+        <div class="home-intro gh-canvas">
+            {{content}}
+        </div>
+        {{/foreach}}
+    {{else}}
+        {{#if @site.description}}
+        <div class="home-intro gh-canvas">
+            <p>{{@site.description}}</p>
+        </div>
+        {{/if}}
+    {{/get}}
 
     <section class="home-categories">
         <div class="home-categories-inner">

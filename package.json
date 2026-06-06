@@ -77,18 +77,6 @@
                 "type": "image",
                 "group": "homepage"
             },
-            "homepage_intro": {
-                "type": "text",
-                "group": "homepage"
-            },
-            "homepage_intro_2": {
-                "type": "text",
-                "group": "homepage"
-            },
-            "homepage_intro_3": {
-                "type": "text",
-                "group": "homepage"
-            },
             "homepage_card_size": {
                 "type": "select",
                 "options": ["Compact", "Regular", "Large"],
