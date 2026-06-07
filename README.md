@@ -74,7 +74,7 @@ The shared card partial used in all list views was extended with a tag row. Ever
 
 ---
 
-### 6. Viewpoints — a cross-pillar opinion section (`page-viewpoints.hbs`)
+### 6. Viewpoints — a cross-pillar opinion section (`page-viewpoints.hbs`)  
 
 A completely new page template that auto-applies to the Ghost page with slug **`viewpoints`**.
 
@@ -88,6 +88,24 @@ A completely new page template that auto-applies to the Ghost page with slug **`
 1. Create a Ghost page with slug `viewpoints`.
 2. Tag any page with the internal tag `#viewpoint` to include it in the listing.
 3. Add any secondary (public) tag to a viewpoint page to make it filterable — no naming convention required.
+
+---
+
+### 7. Floating Table of Contents (`partials/toc.hbs`)
+
+On posts and pages, a floating TOC is automatically generated from the headings in the content and displayed as a sticky sidebar to the right of the text column. The logic lives in `partials/toc.hbs`, which is included by all post templates (`post.hbs`, `custom-full-feature-image.hbs`, `custom-narrow-feature-image.hbs`, `custom-no-feature-image.hbs`) and `page.hbs`.
+
+**Behaviour:**
+- Positioned dynamically via JavaScript: the left edge of the TOC is calculated from the right edge of the first `<p>` in `.gh-content`, so it always aligns with the actual text column regardless of full-width images.
+- Hidden automatically when the screen is too narrow to fit the TOC next to the content without overlap.
+- Requires at least **2 headings** in the content — on shorter posts it stays hidden.
+- Reads **H2** (main sections) and **H3** (sub-sections) from `.gh-content`.
+- H3 entries are slightly indented and smaller to reflect hierarchy.
+- **Feature-image aware**: when a post has a feature image (`.single-media`), the TOC starts below the image and smoothly follows it upward as the user scrolls until the image leaves the viewport, then settles below the navigation header.
+- **Inactive entries** are displayed in light grey.
+- **Active entry** (the section currently in view) is displayed in bold dark text and updates automatically as you scroll.
+- Clicking an entry smooth-scrolls to that heading.
+- No configuration needed — it builds itself from whatever headings are in the post.
 
 ---
 
@@ -116,6 +134,7 @@ flightsim                   …
 | V2.x | Iterative refinements (card design, tag display, CSS) |
 | V3.2 | Sub-tag filter bar on pillar tag pages; smart label stripping on post pages |
 | V3.3 | Viewpoints page template with cross-pillar filter bar |
+| V3.4 | Floating Table of Contents on posts and pages |
 
 ---
 

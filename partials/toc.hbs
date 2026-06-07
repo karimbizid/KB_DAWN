@@ -1,0 +1,153 @@
+<style>
+    .gh-toc {
+        position: fixed;
+        width: 12rem;
+        max-height: calc(100vh - 12rem);
+        overflow-y: auto;
+        z-index: 9999;
+        display: none;
+    }
+    .gh-toc a {
+        display: block;
+        font-size: 1.25rem;
+        line-height: 1.5;
+        padding: 0.2rem 0;
+        color: #bbb;
+        text-decoration: none;
+        font-family: var(--gh-font-body, inherit);
+        transition: color 0.15s;
+    }
+    .gh-toc a[data-level="3"] {
+        padding-left: 1rem;
+        font-size: 1.15rem;
+    }
+    .gh-toc a:hover { color: #555; }
+    .gh-toc a.is-active {
+        font-weight: 700;
+        color: #15171a;
+    }
+</style>
+
+<script>
+(function () {
+    function buildToc() {
+        var tocContent = document.querySelector('.gh-content');
+        if (!tocContent) { return; }
+
+        var tocHeadings = Array.prototype.slice.call(tocContent.querySelectorAll('h2, h3'));
+        if (tocHeadings.length < 2) { return; }
+
+        tocHeadings.forEach(function (h, i) {
+            if (!h.id) { h.id = 'toc-' + i; }
+        });
+
+        var tocNav = document.createElement('nav');
+        tocNav.className = 'gh-toc';
+        tocNav.setAttribute('aria-label', 'Inhoudsopgave');
+
+        var tocLinks = tocHeadings.map(function (h) {
+            var a = document.createElement('a');
+            a.href = '#' + h.id;
+            a.textContent = h.textContent;
+            a.setAttribute('data-level', h.tagName === 'H3' ? '3' : '2');
+            tocNav.appendChild(a);
+            return a;
+        });
+
+        document.body.appendChild(tocNav);
+
+        var remPx      = parseFloat(getComputedStyle(document.documentElement).fontSize) || 10;
+        var tocWidth   = 12 * remPx;   // 120px
+        var GAP        = 6.4 * remPx;  // 64px — gap between content right edge and TOC
+        var featureImg = document.querySelector('.single-media');
+        var headerEl   = document.getElementById('gh-head');
+
+        /* ── Horizontal position ─────────────────────────────────────────── */
+        function getColRight() {
+            // Use an actual <p> to find the text column's right edge
+            // (paragraphs stay in the narrow column even with full-width images)
+            var para = tocContent.querySelector('p');
+            if (para) { return para.getBoundingClientRect().right; }
+            // Fallback: center + half of 720px content
+            return window.innerWidth / 2 + 360;
+        }
+
+        function positionToc() {
+            var colRight = getColRight();
+            var tocLeft  = colRight + GAP;
+            if (tocLeft + tocWidth + remPx <= window.innerWidth) {
+                tocNav.style.left    = tocLeft + 'px';
+                tocNav.style.right   = 'auto';
+                tocNav.style.display = 'block';
+            } else {
+                tocNav.style.display = 'none';
+            }
+        }
+
+        /* ── Vertical position: follow feature image ─────────────────────── */
+        function updateTocTop() {
+            // Clamp header bottom so it's never negative (non-sticky headers scroll away)
+            var rawHeaderBottom = headerEl ? headerEl.getBoundingClientRect().bottom : 0;
+            var headerBottom = Math.max(0, rawHeaderBottom);
+            var minTop = headerBottom + 6 * remPx; // 60px below header
+            var tocTop;
+            if (featureImg) {
+                var imgBottom = featureImg.getBoundingClientRect().bottom;
+                tocTop = Math.max(minTop, imgBottom + 1.6 * remPx);
+            } else {
+                tocTop = minTop;
+            }
+            tocNav.style.top = tocTop + 'px';
+        }
+
+        /* ── Event listeners ─────────────────────────────────────────────── */
+        window.addEventListener('resize', function () {
+            positionToc();
+            updateTocTop();
+        }, { passive: true });
+
+        // Listen on both window AND document to cover Ghost's scroll container
+        window.addEventListener('scroll', updateTocTop, { passive: true });
+        document.addEventListener('scroll', updateTocTop, { passive: true });
+
+        // Initial placement
+        positionToc();
+        updateTocTop();
+
+        // Re-check after all images are loaded (feature image can shift layout)
+        window.addEventListener('load', function () {
+            positionToc();
+            updateTocTop();
+        }, { once: true });
+
+        /* ── Smooth scroll on click ──────────────────────────────────────── */
+        tocLinks.forEach(function (a, i) {
+            a.addEventListener('click', function (e) {
+                e.preventDefault();
+                tocHeadings[i].scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+
+        /* ── Active heading tracking ─────────────────────────────────────── */
+        function tocUpdateActive() {
+            var threshold = window.scrollY + 140;
+            var activeIdx = -1;
+            tocHeadings.forEach(function (h, i) {
+                if (h.getBoundingClientRect().top + window.scrollY <= threshold) {
+                    activeIdx = i;
+                }
+            });
+            tocLinks.forEach(function (a) { a.classList.remove('is-active'); });
+            if (activeIdx >= 0) { tocLinks[activeIdx].classList.add('is-active'); }
+        }
+        window.addEventListener('scroll', tocUpdateActive, { passive: true });
+        tocUpdateActive();
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', buildToc);
+    } else {
+        buildToc();
+    }
+}());
+</script>
